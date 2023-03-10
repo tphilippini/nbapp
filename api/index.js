@@ -86,8 +86,8 @@ connection.once("open", () => {
 /**
  * Bootstrap
  */
-app.use("/users", userRouter);
-app.use("/matches", matchRouter);
+// app.use("/users", userRouter);
+// app.use("/matches", matchRouter);
 app.use("/auth", authRouter);
 
 app.get("/", (req, res) => {
