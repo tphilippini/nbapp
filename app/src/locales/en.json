@@ -1,0 +1,45 @@
+{
+  "generic": {
+    "appname": "Toma",
+    "welcome": "Welcome to @:generic.appname"
+  },
+  "auth": {
+    "reset": "Reset my password",
+    "resetProcess": "Processing the access token verification for resetting the password...",
+    "forgot": "Forgot password",
+    "signin": "Sign in to @:generic.appname",
+    "baseline": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Id atque accusantium commodi minima.",
+    "invalidToken": "Invalid access token",
+    "cta": {
+      "signin": "Sign in",
+      "signup": "Sign up",
+      "reset": "@:auth.reset",
+      "forgotPassword": "@:auth.forgot ?",
+      "noAccountLink": "Don't have an account? {link}",
+      "alreadyAnAccountLink": "Already have an account? {link}",
+      "termsBySignIn": "By signing in, you accept our {terms} and our {privacy}.",
+      "termsBySignUp": "By signing up, you accept our {terms} and our {privacy}."
+    }
+  },
+  "terms": {
+    "conditions": "Terms and Conditions",
+    "privacy": "Privacy Policy"
+  },
+  "form": {
+    "alias": {
+      "label": "Alias",
+      "placeholder": "Enter your alias"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "Enter your email"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "Enter your @.lower:form.password.label",
+      "new": "New @.lower:form.password.label",
+      "newPlaceholder": "Enter your @.lower:form.password.new",
+      "confirm": "Confirm your @.lower:form.password.new"
+    }
+  }
+}

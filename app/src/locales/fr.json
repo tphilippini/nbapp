@@ -1,0 +1,45 @@
+{
+  "generic": {
+    "appname": "Toma",
+    "welcome": "Bienvenue sur @:generic.appname"
+  },
+  "auth": {
+    "reset": "Réinitialiser mon mot de passe",
+    "resetProcess": "Vérification du jeton d'accès pour réinitialiser son mot de passe en cours...",
+    "forgot": "Mot de passe oublié",
+    "signin": "Connexion à @:generic.appname",
+    "baseline": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Id atque accusantium commodi minima.",
+    "invalidToken": "Jeton d'accès non valide",
+    "cta": {
+      "signin": "Connexion",
+      "signup": "S'inscrire",
+      "reset": "@:auth.reset",
+      "forgotPassword": "@:auth.forgot ?",
+      "noAccountLink": "Vous n'avez pas de compte ? {link}",
+      "alreadyAnAccountLink": "Vous avez déjà un compte ? {link}",
+      "termsBySignIn": "En vous connectant, vous acceptez nos {terms} et notre {privacy}.",
+      "termsBySignUp": "En vous inscrivant, vous acceptez nos {terms} et notre {privacy}."
+    }
+  },
+  "terms": {
+    "conditions": "Conditions Générales",
+    "privacy": "Politique de confidentialité"
+  },
+  "form": {
+    "alias": {
+      "label": "Alias",
+      "placeholder": "Saisissez votre alias"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "Saisissez votre email"
+    },
+    "password": {
+      "label": "Mot de passe",
+      "new": "Nouveau @.lower:form.password.label",
+      "newPlaceholder": "Saisissez votre @.lower:form.password.new",
+      "placeholder": "Saisissez votre @.lower:form.password.label",
+      "confirm": "Confirmez votre @.lower:form.password.new"
+    }
+  }
+}
