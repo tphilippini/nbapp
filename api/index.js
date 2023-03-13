@@ -1,18 +1,18 @@
 "use strict";
 
-import authRouter from "./src/auth/auth.route.js";
+// import authErrorMidd from "./_src/middlewares/authError.js";
+import authRouter from "./_src/auth/auth.route.js";
 import bodyParser from "body-parser";
 import cors from "cors";
-import corsMidd from "./src/middlewares/cors.js";
+import corsMidd from "./_src/middlewares/cors.js";
 import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
-import matchRouter from "./src/matches/match.route.js";
+import matchRouter from "./_src/matches/match.route.js";
 import mongoose from "mongoose";
-import otherMidd from "./src/middlewares/other.js";
-import passport from "./src/config/passport.js";
-import userRouter from "./src/users/user.route.js";
-// import authErrorMidd from './src/middlewares/authError';
+import otherMidd from "./_src/middlewares/other.js";
+import passport from "./_src/config/passport.js";
+import userRouter from "./_src/users/user.route.js";
 
 dotenv.config();
 
@@ -25,13 +25,11 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 
-if (process.env.NODE_ENV == "production") {
-  // CORS middleware
-  app.use(corsMidd);
+// CORS middleware
+app.use(corsMidd);
 
-  // A simple middleware
-  app.use(otherMidd);
-}
+// A simple middleware
+app.use(otherMidd);
 
 // Parse input values in JSON format
 app.use(bodyParser.json());
@@ -67,6 +65,9 @@ app.use(passport.initialize());
 //   })
 // );
 
+// Middleware to handle error from authentication
+// app.use(authErrorMidd);
+
 /**
  * Connecting database
  */
@@ -86,11 +87,11 @@ connection.once("open", () => {
 /**
  * Bootstrap
  */
-// app.use("/users", userRouter);
-// app.use("/matches", matchRouter);
-app.use("/auth", authRouter);
+app.use("/api/users", userRouter);
+app.use("/api/matches", matchRouter);
+app.use("/api/auth", authRouter);
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.status(200);
   res.json({ status: 200, message: "ok" });
 });
