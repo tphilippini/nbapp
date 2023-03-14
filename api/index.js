@@ -1,12 +1,13 @@
 "use strict";
 
-// import authErrorMidd from "./_src/middlewares/authError.js";
+import authErrorMidd from "./_src/middlewares/authError.js";
 import authRouter from "./_src/auth/auth.route.js";
 import bodyParser from "body-parser";
 import cors from "cors";
 import corsMidd from "./_src/middlewares/cors.js";
 import dotenv from "dotenv";
 import express from "express";
+import expressJwt from "express-jwt";
 import helmet from "helmet";
 import matchRouter from "./_src/matches/match.route.js";
 import mongoose from "mongoose";
@@ -44,29 +45,30 @@ app.use(
 app.use(passport.initialize());
 
 // Auth middleware
-// app.use(
-//   expressJwt({
-//     secret: process.env.API_ACCESS_TOKEN_SECRET,
-//   }).unless({
-//     path: [
-//       {
-//         url: `${process.env.API_VERSION}/users`,
-//         methods: ['OPTIONS', 'POST'],
-//       },
-//       `${process.env.API_VERSION}/auth`,
-//       `${process.env.API_VERSION}/auth/token`,
-//       // `${process.env.API_VERSION}/auth/google/token`,
-//       // `${process.env.API_VERSION}/auth/facebook/token`,
-//       `${process.env.API_VERSION}/auth/forgot`,
-//       `${process.env.API_VERSION}/auth/reset`,
-//       `${process.env.API_VERSION}/auth/validate`,
-//       // `${process.env.API_VERSION}/users/test`,
-//     ],
-//   })
-// );
+app.use(
+  expressJwt({
+    secret: process.env.API_ACCESS_TOKEN_SECRET,
+  }).unless({
+    path: [
+      {
+        url: `api/users`,
+        methods: ["OPTIONS", "POST"],
+      },
+      `api/auth`,
+      `api/auth/token`,
+      // `api/auth/google/token`,
+      // `api/auth/facebook/token`,
+      `api/auth/forgot`,
+      `api/auth/reset`,
+      `api/auth/confirm`,
+      `api/auth/validate`,
+      // `api/users/test`,
+    ],
+  })
+);
 
 // Middleware to handle error from authentication
-// app.use(authErrorMidd);
+app.use(authErrorMidd);
 
 /**
  * Connecting database
