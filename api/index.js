@@ -94,11 +94,6 @@ app.use("/api/users", userRouter);
 app.use("/api/matches", matchRouter);
 app.use("/api/auth", authRouter);
 
-app.get("/api/titi/toto", (req, res) => {
-  res.status(200);
-  res.json({ status: 200, message: "toto" });
-});
-
 app.get("/api", (req, res) => {
   res.status(200);
   res.json({ status: 200, message: "ok" });

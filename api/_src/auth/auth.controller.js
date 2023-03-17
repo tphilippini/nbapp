@@ -17,7 +17,7 @@ import bcrypt from "bcryptjs";
 // import { isSha1 } from "@/helpers/validator";
 // import { isUUID } from "validator";
 import log from "../helpers/log.js";
-// import mailer from "@/helpers/mailer";
+import mailer from "../helpers/mailer.js";
 import passport from "../config/passport.js";
 import response from "../helpers/response.js";
 import ua from "useragent";
@@ -720,7 +720,7 @@ authController.forgot = (req, res) => {
     const resetToken = generateResetToken(result.uuid, userType);
     result.link = `${process.env.APP_HOST}/auth/reset/${resetToken}`;
 
-    // console.log(result, result.link);
+    // console.log(result.link);
 
     if (!result.methods.includes("local")) {
       response.error(res, 400, ["invalid_email_address"]);
@@ -728,6 +728,7 @@ authController.forgot = (req, res) => {
 
     mailer.sendResetPasswordEmail(result, (err) => {
       if (err) {
+        console.log(err);
         response.error(res, 400, ["mailer_failed"]);
       } else {
         log.success("Hi! Reset password email sent...");
