@@ -73,7 +73,7 @@ import UiMessage from '@/components/ui/UiMessage.vue';
 import { useAuthStore } from '@/stores';
 
 const schema = Yup.object().shape({
-  email: Yup.string().email().required('Email is required'),
+  email: Yup.string().email().required('Email is required').nullable(),
 });
 
 const authStore = useAuthStore();

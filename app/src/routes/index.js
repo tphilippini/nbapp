@@ -64,7 +64,6 @@ router.beforeEach((to, from, next) => {
         console.log('need refresh', auth.value.token);
         authStore.logout();
       } else {
-        console.log('token ok');
         next();
       }
     }

@@ -14,13 +14,14 @@ import EventEmitter from "events";
 import Users from "./user.model.js";
 import bcrypt from "bcryptjs";
 import log from "../helpers/log.js";
-// import mailer from "@/helpers/mailer";
+import mailer from "../helpers/mailer.js";
 import os from "../helpers/os.js";
 import passport from "../config/passport.js";
 import pkg from "validator";
 import response from "../helpers/response.js";
 import ua from "useragent";
 import { v4 as uuidv4 } from "uuid";
+
 const { isEmail, isUUID } = pkg;
 
 const userController = {};
@@ -154,18 +155,29 @@ userController.post = (req, res) => {
            */
           let message = "user_added";
 
+          mailer.sendWelcomeEmail({ email, alias }, (err) => {
+            if (err) {
+              log.error("[mailer_failed] - sendWelcomeEmail");
+            } else {
+              log.success("Hi! Welcome email sent...");
+            }
+          });
+
           if (user.methods.includes("local")) {
             message = "user_added_confirm";
             const confirmToken = generateSignUpToken(user.uuid, "user");
             const link = `${process.env.APP_HOST}/auth/confirm/${confirmToken}`;
-            console.log({ email, alias, link });
-            // mailer.sendSignUpEmail({ email, alias, link }, (err) => {
-            //   if (err) {
-            //     log.error("[mailer_failed] - sendSignUpEmail");
-            //   } else {
-            //     log.success("Hi! Confirm account email sent...");
-            //   }
-            // });
+
+            mailer.sendConfirmationAccountEmail(
+              { email, alias, link },
+              (err) => {
+                if (err) {
+                  log.error("[mailer_failed] - sendConfirmationAccountEmail");
+                } else {
+                  log.success("Hi! Confirm account email sent...");
+                }
+              }
+            );
           }
 
           response.successAdd(res, message, "/auth/token", {
@@ -185,210 +197,206 @@ userController.post = (req, res) => {
   checking();
 };
 
-// userController.patch = (req, res) => {
-//   log.info("Hi! Editing an user...");
+userController.patch = (req, res) => {
+  log.info("Hi! Editing an user...");
 
-//   const grantType = req.body.grant_type;
-//   const userType = req.body.user_type;
+  const grantType = req.body.grant_type;
+  const userType = req.body.user_type;
 
-//   const checkEvent = new EventEmitter();
+  const checkEvent = new EventEmitter();
 
-//   const checking = () => {
-//     const errors = [];
+  const checking = () => {
+    const errors = [];
 
-//     if (!grantType) {
-//       errors.push("missing_params");
-//     } else {
-//       const allowedUserTypes = ["user"];
+    if (!grantType) {
+      errors.push("missing_params");
+    } else {
+      const allowedUserTypes = ["user"];
 
-//       if (grantType === "update") {
-//         log.info("Hi! Updating...");
+      if (grantType === "update") {
+        log.info("Hi! Updating...");
 
-//         const { firstName } = req.body;
-//         const { lastName } = req.body;
-//         const { alias } = req.body;
-//         const { uuid } = req.params;
+        const { firstName } = req.body;
+        const { lastName } = req.body;
+        const { alias } = req.body;
+        const { uuid } = req.params;
 
-//         if (!lastName || !firstName || !alias || !uuid || !userType) {
-//           errors.push("missing_params");
-//         } else {
-//           if (allowedUserTypes.indexOf(userType) === -1) {
-//             errors.push("invalid_user_type");
-//           }
-//           if (!isUUID(uuid)) {
-//             errors.push("invalid_client");
-//           }
-//           if (alias.length < 4) {
-//             errors.push("alias_too_short");
-//           }
+        if (!lastName || !firstName || !alias || !uuid || !userType) {
+          errors.push("missing_params");
+        } else {
+          if (allowedUserTypes.indexOf(userType) === -1) {
+            errors.push("invalid_user_type");
+          }
+          if (!isUUID(uuid)) {
+            errors.push("invalid_client");
+          }
+          if (alias.length < 4) {
+            errors.push("alias_too_short");
+          }
 
-//           if (errors.length === 0) {
-//             Users.findOneByUUID(uuid)
-//               .then((result) => {
-//                 if (result && result.uuid === uuid) {
-//                   Users.doesThisExist({ alias, uuid: { $ne: uuid } })
-//                     .then((exists) => {
-//                       if (exists) {
-//                         errors.push("alias_already_taken");
-//                         checkEvent.emit("error", errors);
-//                       } else {
-//                         result.alias = alias;
-//                         result.firstName = firstName;
-//                         result.lastName = lastName;
+          if (errors.length === 0) {
+            Users.findOneByUUID(uuid)
+              .then((result) => {
+                if (result && result.uuid === uuid) {
+                  Users.doesThisExist({ alias, uuid: { $ne: uuid } })
+                    .then((exists) => {
+                      if (exists) {
+                        errors.push("alias_already_taken");
+                        checkEvent.emit("error", errors);
+                      } else {
+                        result.alias = alias;
+                        result.firstName = firstName;
+                        result.lastName = lastName;
 
-//                         checkEvent.emit("success_update_grant", result);
-//                       }
-//                     })
-//                     .catch(() => {
-//                       errors.push("invalid_credentials");
-//                       checkEvent.emit("error", errors);
-//                     });
-//                 } else {
-//                   errors.push("invalid_credentials");
-//                   checkEvent.emit("error", errors);
-//                 }
-//               })
-//               .catch(() => {
-//                 errors.push("invalid_credentials");
-//                 checkEvent.emit("error", errors);
-//               });
-//           }
-//         }
-//       } else if (grantType === "password") {
-//         log.info("Hi! Updating password...");
+                        checkEvent.emit("success_update_grant", result);
+                      }
+                    })
+                    .catch(() => {
+                      errors.push("invalid_credentials");
+                      checkEvent.emit("error", errors);
+                    });
+                } else {
+                  errors.push("invalid_credentials");
+                  checkEvent.emit("error", errors);
+                }
+              })
+              .catch(() => {
+                errors.push("invalid_credentials");
+                checkEvent.emit("error", errors);
+              });
+          }
+        }
+      } else if (grantType === "password") {
+        log.info("Hi! Updating password...");
 
-//         const { password } = req.body;
-//         const newPassword = req.body.new_password;
-//         const confirmPassword = req.body.confirm_password;
-//         const { uuid } = req.params;
+        const { password } = req.body;
+        const newPassword = req.body.new_password;
+        const confirmPassword = req.body.confirm_password;
+        const { uuid } = req.params;
 
-//         if (
-//           !password ||
-//           !newPassword ||
-//           !confirmPassword ||
-//           !uuid ||
-//           !userType
-//         ) {
-//           errors.push("missing_params");
-//         } else {
-//           if (allowedUserTypes.indexOf(userType) === -1) {
-//             errors.push("invalid_user_type");
-//           }
-//           if (!isUUID(uuid)) {
-//             errors.push("invalid_client");
-//           }
-//           if (password.length < 6) {
-//             errors.push("password_too_short");
-//           }
-//           if (newPassword.length < 6) {
-//             errors.push("new_password_too_short");
-//           }
-//           if (newPassword !== confirmPassword) {
-//             errors.push("password_must_match");
-//           }
+        if (
+          !password ||
+          !newPassword ||
+          !confirmPassword ||
+          !uuid ||
+          !userType
+        ) {
+          errors.push("missing_params");
+        } else {
+          if (allowedUserTypes.indexOf(userType) === -1) {
+            errors.push("invalid_user_type");
+          }
+          if (!isUUID(uuid)) {
+            errors.push("invalid_client");
+          }
+          if (password.length < 6) {
+            errors.push("password_too_short");
+          }
+          if (newPassword.length < 6) {
+            errors.push("new_password_too_short");
+          }
+          if (newPassword !== confirmPassword) {
+            errors.push("password_must_match");
+          }
 
-//           if (errors.length === 0) {
-//             Users.findOneByUUID(uuid)
-//               .then((result) => {
-//                 if (result && result.uuid === uuid && result.local.password) {
-//                   log.info("Hi! Comparing password...");
-//                   bcrypt.compare(
-//                     password,
-//                     result.local.password,
-//                     (err, isMatch) => {
-//                       if (err) throw err;
+          if (errors.length === 0) {
+            Users.findOneByUUID(uuid)
+              .then((result) => {
+                if (result && result.uuid === uuid && result.local.password) {
+                  log.info("Hi! Comparing password...");
+                  bcrypt.compare(
+                    password,
+                    result.local.password,
+                    (err, isMatch) => {
+                      if (err) throw err;
 
-//                       if (isMatch) {
-//                         log.info("Hi! Updating new password...");
-//                         checkEvent.emit(
-//                           "success_update_password_grant",
-//                           result,
-//                           newPassword
-//                         );
-//                       } else {
-//                         errors.push("invalid_credentials");
-//                         checkEvent.emit("error", errors);
-//                       }
-//                     }
-//                   );
-//                 } else {
-//                   errors.push("invalid_credentials");
-//                   checkEvent.emit("error", errors);
-//                 }
-//               })
-//               .catch(() => {
-//                 errors.push("invalid_credentials");
-//                 checkEvent.emit("error", errors);
-//               });
-//           }
-//         }
-//       } else if (grantType === "confirmed") {
-//         log.info("Hi! Updating confirmation...");
-//       } else {
-//         errors.push("invalid_grant_type");
-//       }
-//     }
+                      if (isMatch) {
+                        log.info("Hi! Updating new password...");
+                        checkEvent.emit(
+                          "success_update_password_grant",
+                          result,
+                          newPassword
+                        );
+                      } else {
+                        errors.push("invalid_credentials");
+                        checkEvent.emit("error", errors);
+                      }
+                    }
+                  );
+                } else {
+                  errors.push("invalid_credentials");
+                  checkEvent.emit("error", errors);
+                }
+              })
+              .catch(() => {
+                errors.push("invalid_credentials");
+                checkEvent.emit("error", errors);
+              });
+          }
+        }
+      } else {
+        errors.push("invalid_grant_type");
+      }
+    }
 
-//     if (errors.length > 0) {
-//       checkEvent.emit("error", errors);
-//     }
-//   };
+    if (errors.length > 0) {
+      checkEvent.emit("error", errors);
+    }
+  };
 
-//   checkEvent.on("error", (err) => {
-//     const status = 400;
-//     response.error(res, status, err);
-//   });
+  checkEvent.on("error", (err) => {
+    const status = 400;
+    response.error(res, status, err);
+  });
 
-//   checkEvent.on("success_update_grant", (result) => {
-//     const user = new Users(result);
-//     user.save((err, u) => {
-//       if (err) {
-//         const errors = [];
-//         errors.push(err);
-//         response.error(res, 500, errors);
-//       }
+  checkEvent.on("success_update_grant", (result) => {
+    const user = new Users(result);
+    user.save((err, u) => {
+      if (err) {
+        const errors = [];
+        errors.push(err);
+        response.error(res, 500, errors);
+      }
 
-//       response.success(res, 200, "user_updated", {
-//         uuid: u.uuid,
-//         email: u.local.email || u.facebook.email || u.google.email,
-//         alias: u.alias,
-//         firstName: u.firstName,
-//         lastName: u.lastName,
-//         methods: u.methods,
-//         fid: u.facebook.id || undefined,
-//         gid: u.google.id || undefined,
-//       });
-//     });
-//   });
+      response.success(res, 200, "user_updated", {
+        uuid: u.uuid,
+        email: u.local.email || u.facebook.email || u.google.email,
+        alias: u.alias,
+        firstName: u.firstName,
+        lastName: u.lastName,
+        methods: u.methods,
+        fid: u.facebook.id || undefined,
+        gid: u.google.id || undefined,
+      });
+    });
+  });
 
-//   checkEvent.on("success_update_password_grant", (result, newPassword) => {
-//     bcrypt.hash(newPassword, 12, (err, hash) => {
-//       result.local.password = hash;
+  checkEvent.on("success_update_password_grant", (result, newPassword) => {
+    bcrypt.hash(newPassword, 12, (err, hash) => {
+      result.local.password = hash;
+      const user = new Users(result);
+      user.save((err, u) => {
+        if (err) {
+          const errors = [];
+          errors.push(err);
+          response.error(res, 500, errors);
+        }
+        response.success(res, 200, "password_updated", {
+          uuid: u.uuid,
+          email: u.local.email || u.facebook.email || u.google.email,
+          alias: u.alias,
+          firstName: u.firstName,
+          lastName: u.lastName,
+          methods: u.methods,
+          fid: u.facebook.id || undefined,
+          gid: u.google.id || undefined,
+        });
+      });
+    });
+  });
 
-//       const user = new Users(result);
-//       user.save((err, u) => {
-//         if (err) {
-//           const errors = [];
-//           errors.push(err);
-//           response.error(res, 500, errors);
-//         }
-
-//         response.success(res, 200, "user_updated", {
-//           uuid: u.uuid,
-//           email: u.local.email || u.facebook.email || u.google.email,
-//           alias: u.alias,
-//           firstName: u.firstName,
-//           lastName: u.lastName,
-//           methods: u.methods,
-//           fid: u.facebook.id || undefined,
-//           gid: u.google.id || undefined,
-//         });
-//       });
-//     });
-//   });
-
-//   checking();
-// };
+  checking();
+};
 
 // userController.getAll = (req, res) => {
 //   log.info("Hi! Getting all of the users...");

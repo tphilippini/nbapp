@@ -1,30 +1,55 @@
 <template>
-  <div class="flex h-screen overflow-hidden">
-    <div class="flex-none">
-      <div
-        class="flex flex-col w-64 h-full pt-4 overflow-hidden border-zinc-100 bg-zinc-50"
-        style="box-shadow: rgba(0, 0, 0, 0.05) -20px 0px 26px -20px inset"
-      >
-        <div class="flex-grow px-4 pb-4 overflow-y-auto">
-          <div class="mb-4">
-            <div>
-              <router-link to="/" aria-haspopup="true" aria-expanded="false">
-                <div class="flex items-center gap-2">
-                  <div class="flex-none">
-                    <div class="sj-avatar-container svelte-173satm">
-                      <img
-                        :src="`https://ui-avatars.com/api/?background=000&amp;color=fff&amp;size=65&amp;font-size=0.3&amp;bold=true&amp;name=${username}`"
-                        :alt="username"
-                        class="svelte-173satm"
-                        referrerpolicy="no-referrer"
-                        style="width: 26px; height: 26px"
-                      />
+  <div class="flex flex-col h-screen">
+    <div class="flex-none h-12 border-b bg-gray-50 sm:hidden">
+      <div class="flex items-center h-full gap-4 px-4">
+        <button class="text-gray-700">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            fill="none"
+            style=""
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class=""
+          >
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="6" x2="20" y2="6"></line>
+            <line x1="4" y1="18" x2="20" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex flex-grow overflow-hidden">
+      <div class="flex-none hidden w-64 sm:block">
+        <div
+          class="flex flex-col w-64 h-full pt-4 overflow-hidden border-zinc-100 bg-zinc-50"
+          style="box-shadow: rgba(0, 0, 0, 0.05) -20px 0px 26px -20px inset"
+        >
+          <div class="flex-grow px-4 pb-4 overflow-y-auto">
+            <div class="mb-4">
+              <div>
+                <router-link to="/" aria-haspopup="true" aria-expanded="false">
+                  <div class="flex items-center gap-2">
+                    <div class="flex-none">
+                      <div class="sj-avatar-container svelte-173satm">
+                        <img
+                          :src="`https://ui-avatars.com/api/?background=000&amp;color=fff&amp;size=65&amp;font-size=0.3&amp;bold=true&amp;name=${username}`"
+                          :alt="username"
+                          class="svelte-173satm"
+                          referrerpolicy="no-referrer"
+                          style="width: 26px; height: 26px"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div class="flex text-left truncate">
-                    <div class="text-sm font-medium truncate">Dashboard</div>
-                  </div>
-                  <!-- <svg
+                    <div class="flex text-left truncate">
+                      <div class="text-sm font-medium truncate">Dashboard</div>
+                    </div>
+                    <!-- <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
                     height="16"
@@ -38,11 +63,11 @@
                   >
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg> -->
-                </div>
-              </router-link>
+                  </div>
+                </router-link>
+              </div>
             </div>
-          </div>
-          <!-- <div class="mb-4">
+            <!-- <div class="mb-4">
             <div
               class="font-heading mb-2 px-2 text-[0.7rem] font-extrabold uppercase tracking-wider text-zinc-400"
             >
@@ -251,74 +276,77 @@
               </button>
             </nav>
           </div> -->
-        </div>
-        <div class="relative">
-          <div class="w-full px-4 py-4 text-sm font-medium text-left border-t">
-            <div class="flex items-center gap-2">
-              <div class="flex flex-col justify-center flex-none w-6 h-6 p-1">
-                <img
-                  :src="`https://ui-avatars.com/api/?background=000&amp;color=fff&amp;size=65&amp;font-size=0.3&amp;bold=true&amp;name=${username}`"
-                  :alt="username"
-                  referrerpolicy="no-referrer"
-                  style="width: 26px; height: 26px"
-                />
-              </div>
-              <div class="truncate">
-                <div v-if="user.alias" class="capitalize truncate">
-                  {{ user.alias }}
+          </div>
+          <div class="relative">
+            <div
+              class="w-full px-4 py-4 text-sm font-medium text-left border-t"
+            >
+              <div class="flex items-center gap-2">
+                <div class="flex flex-col justify-center flex-none w-6 h-6 p-1">
+                  <img
+                    :src="`https://ui-avatars.com/api/?background=000&amp;color=fff&amp;size=65&amp;font-size=0.3&amp;bold=true&amp;name=${username}`"
+                    :alt="username"
+                    referrerpolicy="no-referrer"
+                    style="width: 26px; height: 26px"
+                  />
                 </div>
+                <div class="truncate">
+                  <div v-if="user.alias" class="capitalize truncate">
+                    {{ user.alias }}
+                  </div>
+                </div>
+                <div class="flex-grow"></div>
+                <router-link
+                  to="/account"
+                  class="p-1 -mr-1 rounded-md hover:bg-black/5"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide-icon lucide lucide-settings text-zinc-400"
+                  >
+                    <path
+                      d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                    ></path>
+                    <circle cx="12" cy="12" r="3"></circle></svg
+                ></router-link>
+                <button
+                  type="button"
+                  aria-expanded="false"
+                  class="p-1 -mr-1 rounded-md hover:bg-black/5"
+                  @click="handleSignOut"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide-icon lucide lucide-log-out text-zinc-400"
+                  >
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                  </svg>
+                </button>
               </div>
-              <div class="flex-grow"></div>
-              <router-link
-                to="/account"
-                class="p-1 -mr-1 rounded-md hover:bg-black/5"
-                ><svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="lucide-icon lucide lucide-settings text-zinc-400"
-                >
-                  <path
-                    d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
-                  ></path>
-                  <circle cx="12" cy="12" r="3"></circle></svg
-              ></router-link>
-              <button
-                type="button"
-                aria-expanded="false"
-                class="p-1 -mr-1 rounded-md hover:bg-black/5"
-                @click="handleSignOut"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="lucide-icon lucide lucide-log-out text-zinc-400"
-                >
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                  <polyline points="16 17 21 12 16 7"></polyline>
-                  <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
-              </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <router-view></router-view>
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 

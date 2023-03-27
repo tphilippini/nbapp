@@ -1,11 +1,13 @@
+import { Index, Password } from '@/views/account';
+
 import { Default } from '@/layouts';
-import { Index } from '@/views/account';
 
 export default {
   path: '/account',
   component: Default,
   children: [
     { path: '', component: Index, meta: { requiresAuth: true } },
+    { path: 'password', component: Password, meta: { requiresAuth: true } },
     // { path: 'confirm', name: 'confirm', component: Confirm, meta: { requiresAuth: true } },
     // {
     //   path: 'profile',

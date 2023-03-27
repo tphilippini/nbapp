@@ -135,11 +135,13 @@ import { ref, onBeforeMount } from 'vue';
 const schema = Yup.object().shape({
   password: Yup.string()
     .required('New password is required')
-    .min(6, 'Password must be at least 6 characters'),
+    .min(6, 'Password must be at least 6 characters')
+    .nullable(),
   confirm_password: Yup.string()
     .required('Confirm password is required')
     .min(6, 'Confirm password must be at least 6 characters')
-    .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .nullable(),
 });
 
 const route = useRoute();

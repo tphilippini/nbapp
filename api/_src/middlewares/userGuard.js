@@ -3,8 +3,8 @@
 import response from "../helpers/response.js";
 
 const userGuardMidd = (req, res, next) => {
-  if (req.user) {
-    if (req.user.user_type !== "user") {
+  if (req.body) {
+    if (req.body.user_type !== "user") {
       response.error(res, 403, ["insufficient_rights"]);
     } else {
       next();

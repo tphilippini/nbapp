@@ -40,14 +40,28 @@ class Mailer {
     );
   }
 
-  sendSignUpEmail(data, cb) {
+  sendWelcomeEmail(data, cb) {
+    this._setTransporter();
+    this.transporter.sendMail(
+      {
+        from: this.from,
+        to: data.email,
+        subject: "NBA App - Welcome ✨",
+        template: "welcome",
+        context: data,
+      },
+      cb
+    );
+  }
+
+  sendConfirmationAccountEmail(data, cb) {
     this._setTransporter();
     this.transporter.sendMail(
       {
         from: this.from,
         to: data.email,
         subject: "NBA App - Confirm your account 🚀",
-        template: "signup",
+        template: "confirm",
         context: data,
       },
       cb

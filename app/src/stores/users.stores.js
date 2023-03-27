@@ -19,10 +19,6 @@ export const useUsersStore = defineStore(
         loading.value = true;
         const userResponse = await fetchWrapper.post(baseUrl, data);
 
-        // Verify local.confirmed to false 0
-        // Send email with confirmLinkToken
-        // Display message, user created with success,
-        // please verify your email before signin
         loading.value = false;
         messageStore.success(userResponse.message);
         messageStore.clear();
@@ -54,14 +50,14 @@ export const useUsersStore = defineStore(
       return username;
     };
 
-    const patch = async (profile) => {
+    const patch = async (profile, grant = 'update') => {
       try {
         loading.value = true;
         const userResponse = await fetchWrapper.patch(
           `${baseUrl}/${profile.uuid}`,
           {
             ...profile,
-            grant_type: 'update',
+            grant_type: grant,
             user_type: 'user',
           }
         );
