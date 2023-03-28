@@ -17,7 +17,7 @@ const MatchesSchema = new mongoose.Schema(
       unique: true,
     },
 
-    isGameActivated: Boolean,
+    matchCode: String,
 
     startDateEastern: String,
 
@@ -27,7 +27,7 @@ const MatchesSchema = new mongoose.Schema(
 
     endTimeUTC: Date,
 
-    // hTeam: { type: mongoose.Schema.Types.ObjectId, ref: "Teams" },
+    hTeam: { type: mongoose.Schema.Types.ObjectId, ref: "Teams" },
 
     hTeamId: String,
 
@@ -39,7 +39,7 @@ const MatchesSchema = new mongoose.Schema(
 
     hTeamScore: String,
 
-    // vTeam: { type: mongoose.Schema.Types.ObjectId, ref: "Teams" },
+    vTeam: { type: mongoose.Schema.Types.ObjectId, ref: "Teams" },
 
     vTeamId: String,
 
@@ -71,12 +71,20 @@ const MatchesSchema = new mongoose.Schema(
 
     vTeamQScore: Object,
 
-    // stats: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "MatchesStats",
-    //   },
-    // ],
+    seriesGameNumber: String,
+
+    seriesText: String,
+
+    seriesConference: String,
+
+    poRoundDesc: String,
+
+    stats: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "MatchesStats",
+      },
+    ],
 
     // videos: [
     //   {
@@ -109,27 +117,27 @@ MatchesSchema.statics.findMatchesByStartDate = function (date) {
       resolve(matches);
     })
       .select("-__v")
-      .select("-_id");
-    // .populate({
-    //   path: "videos",
-    //   select: "-_id -__v",
-    //   populate: { path: "players", select: "-_id -__v" },
-    // })
-    // .populate({
-    //   path: "stats",
-    //   select: "-_id -__v",
-    //   populate: { path: "player", select: "-_id -__v" },
-    // })
-    // .populate("hTeam vTeam", "-_id -__v");
+      .select("-_id")
+      // .populate({
+      //   path: "videos",
+      //   select: "-_id -__v",
+      //   populate: { path: "players", select: "-_id -__v" },
+      // })
+      // .populate({
+      //   path: "stats",
+      //   select: "-_id -__v",
+      //   // populate: { path: "player", select: "-_id -__v" },
+      // })
+      .populate("hTeam vTeam", "-_id -__v");
     // use leanQueries for extra data manipulation for frontend
     // .lean({ virtuals: true });
   });
 };
 
-// MatchesSchema.pre("remove", (next) => {
-//   this.model("MatchesStats").deleteMany({ match: this._id }, next);
-//   this.model("YoutubeVideos").deleteMany({ match: this._id }, next);
-// });
+MatchesSchema.pre("remove", (next) => {
+  this.model("MatchesStats").deleteMany({ match: this._id }, next);
+  // this.model("YoutubeVideos").deleteMany({ match: this._id }, next);
+});
 
 const Matches = mongoose.model("Matches", MatchesSchema, "Matches");
 export default Matches;

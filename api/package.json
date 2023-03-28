@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "cron:matches": "cross-env NODE_ENV=development node ./cron/matches.js",
     "dev": "nodemon ./index.js"
   },
   "keywords": [],
@@ -15,11 +16,13 @@
     "dayjs": "^1.11.7",
     "express": "^4.18.2",
     "helmet": "^6.0.1",
-    "mongoose": "^6.9.1"
+    "mongoose": "^6.9.1",
+    "node-fetch": "^3.3.1"
   },
   "devDependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
+    "cross-env": "^7.0.3",
     "crypto": "^1.0.1",
     "dotenv": "^16.0.3",
     "express-jwt": "^8.4.1",
@@ -28,6 +31,7 @@
     "nodemailer-express-handlebars": "^6.1.0",
     "nodemon": "^2.0.20",
     "os": "^0.1.2",
+    "p-iteration": "^1.1.8",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "useragent": "^2.3.0",

@@ -3,7 +3,13 @@
   "outputDirectory": "app/dist",
   "framework": "vite",
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index.js" },
+    { "source": "/api/((?!cron/.*).*)", "destination": "/api/index.js" },
     { "source": "/((?!api/.*).*)", "destination": "/" }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/matches?type=daily",
+      "schedule": "30 8 * * *"
+    }
   ]
 }
